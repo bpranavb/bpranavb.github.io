@@ -2,7 +2,7 @@
     --neon-blue: #00f3ff;
     --neon-pink: #ff003c;
     --bg-black: #050505;
-    --grid-color: rgba(0, 243, 255, 0.08);
+    --glass: rgba(0, 243, 255, 0.05);
 }
 
 body {
@@ -13,107 +13,62 @@ body {
     overflow-x: hidden;
 }
 
-/* Grid & Scanline Background */
+/* Background Grid */
 .grid-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
     background-image: 
-        linear-gradient(var(--grid-color) 1px, transparent 1px),
-        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
-    background-size: 40px 40px;
+        linear-gradient(rgba(0, 243, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 243, 255, 0.05) 1px, transparent 1px);
+    background-size: 50px 50px;
     z-index: -1;
 }
 
+/* Interactive Components */
+.content-box {
+    border: 1px solid var(--neon-blue);
+    background: var(--glass);
+    backdrop-filter: blur(5px); /* Requirement: Clean Glass effect */
+    padding: 30px;
+    clip-path: polygon(0 0, 97% 0, 100% 3%, 100% 100%, 3% 100%, 0 97%);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Interaction: Box glows and lifts on hover */
+.content-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+    border-color: var(--neon-pink);
+}
+
+.widget {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border-left: 3px solid var(--neon-blue);
+    padding: 15px;
+    margin: 10px;
+    font-size: 0.8rem;
+}
+
+.widget-row {
+    display: flex; /* Requirement: Layout property */
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Scanline Animation */
 .scanline {
     width: 100%;
-    height: 10px;
-    z-index: 10;
-    background: rgba(0, 243, 255, 0.1);
+    height: 2px;
+    background: rgba(0, 243, 255, 0.3);
     position: fixed;
-    top: -10px;
-    animation: scan 8s linear infinite;
-    box-shadow: 0 0 20px var(--neon-blue);
+    top: 0;
+    animation: scan 6s linear infinite;
+    z-index: 99;
     pointer-events: none;
 }
 
 @keyframes scan {
-    0% { top: -10px; }
-    100% { top: 100%; }
-}
-
-/* Layout Containers */
-.hud-container {
-    max-width: 900px;
-    margin: 40px auto;
-    padding: 20px;
-}
-
-.content-box {
-    position: relative;
-    border: 1px solid var(--neon-blue);
-    background: rgba(0, 0, 0, 0.85);
-    padding: 30px;
-    clip-path: polygon(0 0, 95% 0, 100% 5%, 100% 100%, 5% 100%, 0 95%);
-    box-shadow: inset 0 0 20px rgba(0, 243, 255, 0.2), 0 0 15px rgba(0, 243, 255, 0.1);
-    margin-bottom: 20px;
-}
-
-.corner-tag {
-    position: absolute;
-    top: 0; left: 0;
-    background: var(--neon-blue);
-    color: black;
-    font-size: 10px;
-    padding: 2px 8px;
-    font-weight: bold;
-}
-
-/* Navigation */
-.nav-container {
-    display: flex;
-    justify-content: space-between;
-    padding: 15px 40px;
-    border-bottom: 1px solid var(--neon-blue);
-    background: rgba(0, 0, 0, 0.9);
-}
-
-.nav-links a {
-    color: var(--neon-blue);
-    text-decoration: none;
-    margin-right: 30px;
-    opacity: 0.7;
-}
-
-.nav-links a.active, .nav-links a:hover {
-    opacity: 1;
-    text-shadow: 0 0 10px var(--neon-blue);
-}
-
-/* Profile Image */
-.hud-img {
-    border: 2px solid var(--neon-blue);
-    width: 150px;
-    height: 150px;
-    filter: hue-rotate(180deg) brightness(1.2);
-    margin-right: 25px;
-}
-
-.profile-layout {
-    display: flex;
-    align-items: flex-start;
-}
-
-/* Typewriter header effect */
-h1 {
-    font-size: 2.5rem;
-    letter-spacing: 5px;
-    border-right: 3px solid var(--neon-blue);
-    width: fit-content;
-    padding-right: 10px;
-    animation: blink 0.8s step-end infinite;
-}
-
-@keyframes blink {
-    from, to { border-color: transparent }
-    50% { border-color: var(--neon-blue); }
+    0% { transform: translateY(0); }
+    100% { transform: translateY(100vh); }
 }
